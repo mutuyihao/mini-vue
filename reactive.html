@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script>
+
+        const data = {
+            msg: ""
+        }
+
+        const vm = {}
+
+        // app.innerHTML = data.keys().join("/")
+        function observe(data) {
+            Object.keys(data).forEach(key => {
+                Object.defineProperty(data, key, {
+                    configurable: true,
+                    enumerable: true,
+                    get() {
+                        return data.key
+                    },
+                    set(newValue) {
+                        if (newValue === data.key) {
+                            return
+                        }
+                        data.key = newValue
+                        render()
+                    }
+                })
+            });
+
+        }
+        function render(container = "#app") {
+            let app = document.querySelector(container)
+            let content = ""
+            Object.keys(data).forEach(key => {
+                content += data.key + "/"
+                // console.log(key, data, data.msg)
+            })
+            app.innerHTML = content
+        }
+        observe(data)
+        render("#app")
+        data.msg = "Hello,world!"
+        setTimeout(() => {
+            data.msg = "不要回答，不要回答！"
+        }, 4000)
+        // 当我们改变data内的值的时候，网页中渲染的值也会自动更新，实现vue2的最简单版响应式。
+    </script>
+</body>
+
+</html>
