@@ -13,7 +13,8 @@
     <script>
 
         const data = {
-            msg: ""
+            msg: "",
+            msg1: "",
         }
 
         const vm = {}
@@ -50,10 +51,14 @@
         observe(data)
         render("#app")
         vm.msg = "Hello,world!"
+        vm.msg1 = "我是红岸基地的叶文洁"
         setTimeout(() => {
-            vm.msg = "不要回答，不要回答！"
+            vm.msg = "这里是半人马座三体星系，我是一个和平爱好者，向你发起警告"
         }, 4000)
-        // 当我们改变data内的值的时候，网页中渲染的值也会自动更新，实现vue2的最简单版响应式。
+        setTimeout(() => {
+            vm.msg1 = "不要回答，不要回答！"
+        }, 4000)
+        // 当我们改变vm内的值的时候，网页中渲染的值也会自动更新，实现vue2的最简单版响应式。
     </script>
 </body>
 
