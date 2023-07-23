@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script>
+        class EventBus {
+            constructor() {
+                this._events = new Map()
+                this.waitList = []
+            }
+            emit(type, ...args) {
+                let onList = this._events.get(type)
+                if (!onList) {
+                    this.waitList.push({ type, args })
+                    return
+                }
+                onList.forEach(fn => {
+                    if (args.length > 0) {
+                        fn.apply(this, args)
+                    } else {
+                        fn.call(this)
+                    }
+                });
+            }
+            on(type, fn) {
+                let onList = this._events.get(type)
+                if (!onList) {
+                    this._events.set(type, [fn])
+                } else {
+                    this._events.set(type, [...onList, fn])
+                }
+                console.log(this._events)
+                if (this.waitList.length > 0) {
+                    // let waitList = JSON.parse(JSON.stringify(this.waitList))
+                    // this.waitList = []
+                    for (let i of this.waitList) {
+                        if (i.type === type) {
+                            this.emit(i.type, ...i.args)
+                        }
+                    }
+                }
+
+            }
+        }
+
+        let eventBus = new EventBus()
+
+        eventBus.emit("click", "Hello,world!")
+        eventBus.emit("click", "Hello world again!")
+        eventBus.emit("click", ["1", "2", "3"])
+        eventBus.on("click", (data) => { document.querySelector("#test").innerHTML = data })
+        eventBus.on("click", (data) => { console.log(data) })
+        eventBus.on("click", (data) => { window.alert(data + "click") })
+
+
+    </script>
+</body>
+
+</html>
